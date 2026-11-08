@@ -5,6 +5,9 @@ CREATE TABLE IF NOT EXISTS admin_records (
   category TEXT NOT NULL CHECK (category IN ('concurenti','parteneri','clienti')),
   name TEXT NOT NULL,
   city TEXT NOT NULL DEFAULT '',
+  country TEXT NOT NULL DEFAULT 'RO',
+  latitude REAL,
+  longitude REAL,
   website TEXT NOT NULL DEFAULT '',
   contact TEXT NOT NULL DEFAULT '',
   email TEXT NOT NULL DEFAULT '',
@@ -16,4 +19,5 @@ CREATE TABLE IF NOT EXISTS admin_records (
   updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
 );
 CREATE INDEX IF NOT EXISTS idx_admin_records_category_updated ON admin_records(category, updated_at DESC);
+CREATE INDEX IF NOT EXISTS idx_admin_records_country ON admin_records(country);
 CREATE INDEX IF NOT EXISTS idx_admin_records_status ON admin_records(status);
