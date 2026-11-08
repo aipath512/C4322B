@@ -1,3 +1,11 @@
+# Mod ADMIN DEMO — public, fără autentificare
+
+Pagina `/admin/` este în prezent un demonstrator fără login. Identitatea afișată este `contact@5thelement.ai`, dar **nu este o identitate verificată**. Nu sunt expuse date private, nu sunt executate acțiuni pe baza D1 și nu se folosesc credențiale. Listele și sinteza folosesc exclusiv înregistrări introduse în memoria paginii, care dispar la refresh. Folosiți doar date fictive; nu introduceți informații personale ori comerciale confidențiale.
+
+API-ul `/api/admin/*` rămâne protejat server-side prin Cloudflare Access și nu a fost deschis public. Pentru revenirea la ADMIN PRIVAT, front-endul se reconectează la `admin/admin.js`, apoi se configurează Cloudflare Access, D1 și un email de proprietar verificat.
+
+---
+
 # ADMIN privat — TSC INSTAL (C4322B)
 
 ## Stare
