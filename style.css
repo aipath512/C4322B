@@ -19,3 +19,20 @@
 .legal-details dd{color:var(--muted)}
 .legal-small{font-size:.86rem;margin-top:16px}
 @media(max-width:600px){.legal-details{grid-template-columns:1fr}.legal-details dt{padding:11px 6px 1px;border:0}.legal-details dd{padding:0 6px 12px}.legal-nav{padding:16px}.legal-panel{scroll-margin-top:100px}}
+
+/* Servicii/Produse: căutare în partea superioară, inclusiv după intenție */
+.catalog-tools{border:1px solid #cdded7;border-radius:22px;background:linear-gradient(145deg,#f2faf5 0%,#fff 72%);padding:clamp(18px,3.2vw,34px);margin-bottom:22px;box-shadow:0 12px 38px rgba(15,56,48,.07)}
+.catalog-tools .sectionhead{margin-bottom:18px}
+.catalog-tools .sectionhead h2{margin-bottom:8px}
+.catalog-search-label{display:block;font-family:Manrope,sans-serif;font-size:1rem;font-weight:800;color:#183a36;margin-bottom:9px}
+.catalog-search-box{position:relative;display:flex;align-items:center}
+.catalog-search-box>span{position:absolute;left:18px;color:#0a6d62;font-size:2rem;line-height:1;pointer-events:none}
+.catalog-search-box .search{padding:17px 20px 17px 55px;margin:0;background:#fff;border:2px solid #84b4a7;border-radius:15px;font-size:1.03rem;color:#15272b;min-height:60px}
+.catalog-search-box .search:focus-visible{outline:3px solid #36bda7;outline-offset:2px}
+.catalog-search-note{font-size:.84rem;color:#42635b;margin:13px 0 17px;min-height:1.4em}
+.intent-examples{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:14px}
+.intent-examples span{color:#4b6760;font-weight:700;font-size:.85rem}
+.intent-examples button{background:#fff;border:1px solid #b9d7cb;border-radius:999px;padding:9px 12px;color:#165348;cursor:pointer;font-size:.88rem;font-weight:700}
+.intent-examples button:hover,.intent-examples button:focus-visible{background:#dff6ed;outline-offset:2px}
+.catalog-tools .filters{margin-bottom:0}
+@media(max-width:640px){.catalog-tools{padding:18px 14px}.catalog-search-box .search{font-size:1rem}.intent-examples button{font-size:.82rem;padding:9px 11px}}
