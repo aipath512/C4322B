@@ -36,3 +36,24 @@
 .intent-examples button:hover,.intent-examples button:focus-visible{background:#dff6ed;outline-offset:2px}
 .catalog-tools .filters{margin-bottom:0}
 @media(max-width:640px){.catalog-tools{padding:18px 14px}.catalog-search-box .search{font-size:1rem}.intent-examples button{font-size:.82rem;padding:9px 11px}}
+
+/* TSC INSTAL — carduri produse PREMIUM, text stânga / fotografie dreapta */
+.product-entry{display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,38%);align-items:center;gap:15px;min-height:215px;background:#121b1b;color:#f6f6f2;border:1px solid #43534e;border-radius:19px;padding:20px;transition:box-shadow .18s,border-color .18s}
+.product-entry:hover,.product-entry:focus-within{border-color:#c1a574;box-shadow:0 10px 26px rgba(12,26,23,.15)}
+.product-entry-text{min-width:0;display:flex;flex-direction:column;gap:9px;align-items:flex-start}
+.product-entry .eyebrow{color:#c3d6be}
+.product-entry h3{color:#fff;font-size:clamp(1rem,1.6vw,1.24rem);line-height:1.3}
+.product-entry p{color:#d0d9d4;font-size:.89rem;line-height:1.45}
+.product-entry img{display:block;width:100%;aspect-ratio:1/1;min-height:125px;max-height:200px;object-fit:cover;border-radius:15px;background:#293332}
+.product-entry .product-preview-note{font-size:.7rem;color:#a9b9b2}
+.product-entry .product-related{font-size:.76rem;color:#cfb88d;margin-top:3px}
+.product-entry button{background:#d8e7db;border:0;border-radius:9px;padding:10px 12px;color:#16372e;font-weight:800;font-size:.84rem;cursor:pointer;min-height:43px}
+.product-entry button:hover,.product-entry button:focus-visible{background:#fff}
+.product-detail-photo{width:100%;max-width:640px;max-height:260px;object-fit:cover;border-radius:14px;margin:14px 0 6px}
+.product-preview-note{font-size:.78rem;color:var(--muted);margin:0 0 9px}
+.product-crosssell{border:1px solid #bdd7cb;padding:18px;border-radius:14px;background:#ecf8f1;margin:20px 0}
+.product-crosssell h3{font-size:1.05rem;margin:0 0 6px}
+.product-crosssell p{font-size:.86rem;margin-bottom:10px}
+.product-crosssell a{display:inline-block;margin:5px 10px 5px 0;color:#13644f;font-weight:800}
+@media(max-width:900px){body[data-page="produse"] .catalog{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){body[data-page="produse"] .catalog{grid-template-columns:1fr}.product-entry{grid-template-columns:minmax(0,1fr) 108px;gap:12px;padding:14px;min-height:165px}.product-entry img{min-height:108px}.product-entry h3{font-size:1.06rem}.product-entry p{font-size:.82rem}.product-entry button{font-size:.78rem}}
