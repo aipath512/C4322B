@@ -46,8 +46,19 @@ function clean(input){
  if(!STATES.has(out.status))throw Error('Status invalid');
  for(const k of ['website','source_url'])if(out[k]&&!/^https:\/\/[a-z0-9][^\s]*$/i.test(out[k]))throw Error('URL HTTPS obligatoriu: '+k);
  if(out.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(out.email))throw Error('Email invalid');
- out.category=input.category;return out;
+ const latitude=input.latitude===''||input.latitude===null||input.latitude===undefined?null:Number(input.latitude);const longitude=input.longitude===''||input.longitude===null||input.longitude===undefined?null:Number(input.longitude);if((latitude===null)!==(longitude===null))throw Error('Latitudine și longitudine obligatorii împreună');if(latitude!==null&&(!Number.isFinite(latitude)||latitude< -90||latitude>90||!Number.isFinite(longitude)||longitude< -180||longitude>180))throw Error('Coordonate invalide');out.latitude=latitude;out.longitude=longitude;out.country=String(input.country||'RO').toUpperCase();if(!/^[A-Z]{2}$/.test(out.country))throw Error('Cod țară invalid');out.category=input.category;return out;
 }
+function geographic(url,env){
+ const radius=Number(url.searchParams.get('radius')||30);
+ const country=(url.searchParams.get('country')||'RO').toUpperCase();
+ if(![10,30,50,100].includes(radius))throw Error('Rază invalidă');
+ if(!/^(ALL|[A-Z]{2})$/.test(country))throw Error('Țară invalidă');
+ const lat=Number(env.ADMIN_HQ_LAT),lon=Number(env.ADMIN_HQ_LON);
+ if(env.ADMIN_HQ_LAT===undefined||env.ADMIN_HQ_LON===undefined||!Number.isFinite(lat)||!Number.isFinite(lon)||lat< -90||lat>90||lon< -180||lon>180)throw Error('Coordonatele sediului nu sunt configurate');
+ return {radius,country,lat,lon};
+}
+function distanceKm(a,b,c,d){const rad=Math.PI/180,dl=(c-a)*rad,do_=(d-b)*rad;const v=Math.sin(dl/2)**2+Math.cos(a*rad)*Math.cos(c*rad)*Math.sin(do_/2)**2;return 6371.0088*2*Math.asin(Math.min(1,Math.sqrt(v)))}
+function inZone(row,geo){if(row.latitude===null||row.longitude===null||!Number.isFinite(Number(row.latitude))||!Number.isFinite(Number(row.longitude)))return false;if(geo.country!=='ALL'&&row.country!==geo.country)return false;return distanceKm(geo.lat,geo.lon,Number(row.latitude),Number(row.longitude))<=geo.radius}
 function safeOrigin(request){const origin=request.headers.get('origin');return origin&&origin===new URL(request.url).origin}
 async function handler(context){
  const {request,env}=context;
@@ -56,15 +67,20 @@ async function handler(context){
  const url=new URL(request.url);
  const route=url.pathname.replace(/^\/api\/admin\/?/,'').replace(/\/$/,'');
  if(request.method==='GET'&&route==='session')return respond({ok:true,email:user.email});
- if(request.method==='GET'&&route==='summary'){
-  try{const r=await env.ADMIN_DB.prepare('SELECT category, COUNT(*) AS total FROM admin_records GROUP BY category').all();
-   let data={concurenti:0,parteneri:0,clienti:0,total:0};for(const x of r.results||[]){if(CATEGORIES.has(x.category)){data[x.category]=x.total;data.total+=x.total}}return respond(data)}
-  catch{return deny('Nu este instalată schema D1 sau există o eroare de citire.',503)}
- }
- if(request.method==='GET'&&route==='records'){
-  const category=url.searchParams.get('category');if(!CATEGORIES.has(category))return deny('Categorie invalidă',400);
-  try{const r=await env.ADMIN_DB.prepare('SELECT id,category,name,city,website,contact,email,status,services,notes,source_url,created_at,updated_at FROM admin_records WHERE category=? ORDER BY updated_at DESC LIMIT 300').bind(category).all();return respond({records:r.results||[]})}
-  catch{return deny('Baza D1 nu este inițializată.',503)}
+ if(request.method==='GET'&&(route==='summary'||route==='records')){
+  let geo;try{geo=geographic(url,env)}catch(e){return deny(e.message,503)}
+  try{
+   if(route==='summary'){
+    const r=await env.ADMIN_DB.prepare('SELECT category,country,latitude,longitude FROM admin_records').all();
+    const data={concurenti:0,parteneri:0,clienti:0,total:0};
+    for(const row of r.results||[])if(CATEGORIES.has(row.category)&&inZone(row,geo)){data[row.category]++;data.total++}
+    return respond({...data,radius:geo.radius,country:geo.country});
+   }
+   const category=url.searchParams.get('category');if(!CATEGORIES.has(category))return deny('Categorie invalidă',400);
+   const r=await env.ADMIN_DB.prepare('SELECT id,category,name,city,country,latitude,longitude,website,contact,email,status,services,notes,source_url,created_at,updated_at FROM admin_records WHERE category=? ORDER BY updated_at DESC LIMIT 2000').bind(category).all();
+   const records=(r.results||[]).filter(row=>inZone(row,geo)).map(row=>({...row,distance_km:Math.round(distanceKm(geo.lat,geo.lon,Number(row.latitude),Number(row.longitude))*10)/10}));
+   return respond({records,radius:geo.radius,country:geo.country});
+  }catch{return deny('Baza D1 nu este inițializată sau schema geografică lipsește.',503)}
  }
  if(request.method==='POST'&&route==='records'){
   if(!safeOrigin(request))return deny('Origine invalidă',403);
@@ -73,7 +89,7 @@ async function handler(context){
   let data;try{const raw=await request.text();if(raw.length>12000)return deny('Cererea este prea mare',413);data=clean(JSON.parse(raw))}
   catch(e){return deny('Date invalide: '+e.message,400)}
   const id=crypto.randomUUID();
-  try{await env.ADMIN_DB.prepare('INSERT INTO admin_records (id,category,name,city,website,contact,email,status,services,notes,source_url) VALUES (?,?,?,?,?,?,?,?,?,?,?)').bind(id,data.category,...FIELDS.map(k=>data[k])).run();return respond({ok:true,id},201)}
+  try{await env.ADMIN_DB.prepare('INSERT INTO admin_records (id,category,name,city,website,contact,email,status,services,notes,source_url,country,latitude,longitude) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)').bind(id,data.category,...FIELDS.map(k=>data[k]),data.country,data.latitude,data.longitude).run();return respond({ok:true,id},201)}
   catch{return deny('Înregistrarea nu a putut fi salvată în D1',503)}
  }
  if(request.method==='DELETE'&&route.startsWith('records/')){
