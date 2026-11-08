@@ -52,7 +52,14 @@ function geographic(url,env){
  const radius=Number(url.searchParams.get('radius')||30);
  const country=(url.searchParams.get('country')||'RO').toUpperCase();
  if(![10,30,50,100].includes(radius))throw Error('Rază invalidă');
- if(!/^(ALL|[A-Z]{2})$/.test(country))throw Error('Țară invalidă');
+ if(!/^(RO|BG|HU|MD|ALL)$/.test(country))throw Error('Țară invalidă');
+ // The free entitlement is Romania, within a maximum radius of 30 km.
+ // Paid upgrades must be explicitly provisioned server-side after payment verification.
+ const premiumRadius=Number(env.ADMIN_ENTITLED_RADIUS_KM||30);
+ const entitledCountries=String(env.ADMIN_ENTITLED_COUNTRIES||'RO').toUpperCase().split(',').map(x=>x.trim()).filter(Boolean);
+ if(![30,50,100].includes(premiumRadius))throw Error('Configurație abonament invalidă');
+ if(radius>premiumRadius)return {error:'Extinderea zonei peste '+premiumRadius+' km necesită un pachet contra cost activat.',premiumRequired:true};
+ if(country!=='RO'&&!entitledCountries.includes(country))return {error:'Extinderea în alte țări este disponibilă contra cost, după activarea accesului.',premiumRequired:true};
  const lat=Number(env.ADMIN_HQ_LAT),lon=Number(env.ADMIN_HQ_LON);
  if(env.ADMIN_HQ_LAT===undefined||env.ADMIN_HQ_LON===undefined||!Number.isFinite(lat)||!Number.isFinite(lon)||lat< -90||lat>90||lon< -180||lon>180)throw Error('Coordonatele sediului nu sunt configurate');
  return {radius,country,lat,lon};
@@ -68,7 +75,7 @@ async function handler(context){
  const route=url.pathname.replace(/^\/api\/admin\/?/,'').replace(/\/$/,'');
  if(request.method==='GET'&&route==='session')return respond({ok:true,email:user.email});
  if(request.method==='GET'&&(route==='summary'||route==='records')){
-  let geo;try{geo=geographic(url,env)}catch(e){return deny(e.message,503)}
+  let geo;try{geo=geographic(url,env);if(geo.premiumRequired)return deny(geo.error,403)}catch(e){return deny(e.message,503)}
   try{
    if(route==='summary'){
     const r=await env.ADMIN_DB.prepare('SELECT category,country,latitude,longitude FROM admin_records').all();
