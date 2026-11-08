@@ -19,6 +19,7 @@ Interfața `/admin/` conține patru module: **Concurenți**, **Parteneri**, **Cl
    - `ADMIN_OWNER_EMAIL` — adresa verificată exclusivă a proprietarului;
    - `CF_ACCESS_TEAM_DOMAIN` — ex. `echipa.cloudflareaccess.com`, cu numele real;
    - `CF_ACCESS_AUD` — Application Audience (AUD) afișat de Cloudflare Access, pentru aplicația care emite JWT-ul la `/api/admin/*`.
+   - `ADMIN_HQ_LAT` și `ADMIN_HQ_LON` — coordonatele reale, verificate, ale sediului din Sectorul 3, București. Nu folosiți un centru generic al Sectorului 3 drept adresă exactă.
 5. Creează baza de date **Cloudflare D1** și leag-o în Pages cu binding exact `ADMIN_DB`. Execută migrarea `migrations/0001_admin.sql` pe această bază (de exemplu prin `wrangler d1 execute`), întâi într-un mediu de test.
 6. Publică și testează: 
    - utilizator fără login → `GET /api/admin/session` = 401/403 (sau 503 dacă infrastructura este neconfigurată), fără date;
@@ -32,3 +33,13 @@ Interfața `/admin/` conține patru module: **Concurenți**, **Parteneri**, **Cl
 - API-ul validează semnătura RSA-SHA256 folosind JWKS emis de echipa Access, `iss`, `aud`, expirația și emailul exact. Nu se bazează pe o valoare introdusă în formular sau pe `localStorage`.
 - Întreținerea entităților este CRUD minimal; nu există cercetare web automată, e-mailing automat, enrichment, AI summarization sau import extern în această versiune.
 - Protejați accesul la D1, evitați datele personale fără temei legal, limitați retenția și configurați audit/backup înainte de utilizarea comercială.
+
+## Filtre geografice — implementate
+
+- Toate modulele folosesc **Zonă 30 km** și **Țară România** ca valori implicite. Opțiuni de rază: 10, 30, 50, 100 km; opțiuni de țară: România, Bulgaria, Ungaria, Republica Moldova, toate.
+- Calculele folosesc formula Haversine în kilometri între `ADMIN_HQ_LAT/LON` (sediu real, verificat) și `latitude/longitude` (coordonate verificate ale entității). Nu se inventează poziții pornind de la nume sau localitate.
+- Dacă sediul nu are coordonatele configurate, API refuză filtrarea și sinteza cu răspuns de eroare 503; nu se prezintă numere incorecte.
+- Înregistrările fără coordonate nu intră în rezultatele filtrate; ele rămân în D1 și pot fi completate într-o versiune ulterioară cu o operațiune de geocodare verificată.
+- Sinteza calculează doar înregistrările din aceeași zonă și țară; nu este o sinteză generată de un model AI.
+- Dacă D1 a fost creată înainte de filtrarea geografică, executați `migrations/0002_admin_geography.sql` o singură dată. Pentru bazele create de la zero cu noul `0001_admin.sql`, NU executați `0002`, deoarece coloanele există deja.
+- Selectarea emailului proprietarului este încă **neconfirmată**. Nu configurați o adresă presupusă; setarea `ADMIN_OWNER_EMAIL` trebuie aprobată expres de proprietar.
