@@ -43,3 +43,11 @@ Interfața `/admin/` conține patru module: **Concurenți**, **Parteneri**, **Cl
 - Sinteza calculează doar înregistrările din aceeași zonă și țară; nu este o sinteză generată de un model AI.
 - Dacă D1 a fost creată înainte de filtrarea geografică, executați `migrations/0002_admin_geography.sql` o singură dată. Pentru bazele create de la zero cu noul `0001_admin.sql`, NU executați `0002`, deoarece coloanele există deja.
 - Selectarea emailului proprietarului este încă **neconfirmată**. Nu configurați o adresă presupusă; setarea `ADMIN_OWNER_EMAIL` trebuie aprobată expres de proprietar.
+
+## Model comercial — zonă inclusă și extindere contra cost
+
+- **Implicit / inclus:** până la **30 km** de sediul configurat și **România (RO)**. Proprietarul poate restrânge la 10 km fără cost suplimentar.
+- **Contra cost:** extindere la **50 km** sau **100 km**, precum și acces la **alte țări**. Prețurile și facturarea nu sunt încă definite sau implementate.
+- **Control server-side:** API-ul respinge cu HTTP 403 o rază sau o țară dincolo de drepturile acordate. Un dropdown schimbat în browser nu acordă drepturi.
+- **Provisioning după achiziție verificată:** numai operatorul poate seta `ADMIN_ENTITLED_RADIUS_KM` la `30`, `50` ori `100` (implicit `30`) și `ADMIN_ENTITLED_COUNTRIES` la un CSV de coduri ISO permise, de exemplu `RO,BG` (implicit `RO`). `ALL` se acordă numai după o decizie explicită privind pachetul. Nu există self-service checkout sau validare a plății în această versiune.
+- **Atenție geografică:** pentru fiecare țară extinsă, raza continuă să fie măsurată față de **același sediu** din Sectorul 3. O opțiune de explorare națională / UE cu alte centre geografice ar necesita un model separat de acoperire.
