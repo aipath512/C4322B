@@ -24,7 +24,7 @@ function faq(){return qa.map(x=>'<details><summary>'+esc(x[0])+'</summary><p>'+e
 function about(){return title('Despre','O casă confortabilă începe cu decizii informate.','C4322B este modelul unei companii de instalații pentru locuințele din București, creat pentru a demonstra un website gata de personalizare.')+
 section('<div class="split"><div><span class="micro">Cine suntem — exemplu</span><h2>Trei specializări. O experiență simplă pentru proprietar.</h2><p>În acest scenariu, C4322B prezintă într-un singur loc lucrările de încălzire, climatizare și sanitare, de la consultanță până la întreținere.</p><p>Structura site-ului este orientată către întrebările proprietarului: ce problemă rezolv, cum se execută, ce echipament aleg și ce trebuie să apară în ofertă.</p>'+aboutDemo+'</div><img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1100&q=80" alt="Locuință modernă, imagine ilustrativă"></div>')+cta}
 function catalog(kind){const isS=kind==='servicii',items=isS?SERVICES:PRODUCTS;return title(isS?'Servicii':'Produse',isS?'Serviciile TSC INSTAL':'Echipamente și materiale pe care merită să le înțelegi.',isS?'Încălzire, climatizare și sanitare pentru persoane și firme. Spune în cuvintele tale de ce ai nevoie.':'Produsele sunt distincte de manoperă. Nu atribuim mărci, stocuri ori prețuri neconfirmate.')+
-section('<div class="catalog-tools"><div class="sectionhead"><span class="micro">TSC INSTAL · '+items.length+' fișe</span><h2>'+(isS?'Cu ce te putem ajuta?':'Caută echipamentul potrivit')+'</h2><p>'+(isS?'Caută un serviciu după cuvinte-cheie sau descrie problema. De exemplu: „nu am căldură”, „curge apa”, „vreau aer condiționat”.':'Caută după produs, caracteristică sau echipament.')+'</p></div><label class="catalog-search-label" for="catalogSearch">'+(isS?'Caută servicii după cuvinte-cheie sau intenții':'Caută în catalogul de produse')+'</label><div class="catalog-search-box"><span aria-hidden="true">⌕</span><input class="search" id="catalogSearch" type="search" autocomplete="off" placeholder="'+(isS?'Ex.: îmi curge apa sub chiuvetă, centrală defectă…':'Ex.: pompă de căldură, AC, baterie, boiler…')+'" aria-label="Caută în catalog"></div>'+(isS?'<div class="intent-examples" aria-label="Exemple de intenții"><span>Încearcă:</span><button type="button" data-example="nu am căldură">Nu am căldură</button><button type="button" data-example="curge apa">Curge apa</button><button type="button" data-example="vreau aer condiționat">Vreau aer condiționat</button><button type="button" data-example="revizie centrală">Revizie centrală</button></div>':'')+'<p class="catalog-search-note" id="searchHint" role="status" aria-live="polite">'+(isS?'Rezultatele sugerează servicii relevante, nu reprezintă diagnostic tehnic.':'Rezultatele se actualizează pe măsură ce tastezi.')+'</p><div class="filters" id="filters" aria-label="Filtrează după familie"><button class="chip" type="button" data-family="toate" aria-pressed="true">Toate</button><button class="chip" type="button" data-family="incalzire" aria-pressed="false">Încălzire</button><button class="chip" type="button" data-family="climatizare" aria-pressed="false">Climatizare</button><button class="chip" type="button" data-family="sanitare" aria-pressed="false">Sanitare</button></div></div><p class="muted tiny" id="catalogCount" aria-live="polite"></p><div class="catalog" id="catalogGrid"></div>')+cta}
+section('<div class="catalog-tools"><div class="sectionhead"><span class="micro">TSC INSTAL · '+items.length+' fișe</span><h2>'+(isS?'Cu ce te putem ajuta?':'Caută echipamentul potrivit')+'</h2><p>'+(isS?'Caută un serviciu după cuvinte-cheie sau descrie problema. De exemplu: „nu am căldură”, „curge apa”, „vreau aer condiționat”.':'Caută după cuvinte-cheie ori intenție: „centrală pentru apartament”, „AC pentru 35 mp”, „baterie pentru duș”.')+'</p></div><label class="catalog-search-label" for="catalogSearch">'+(isS?'Caută servicii după cuvinte-cheie sau intenții':'Caută în catalogul de produse')+'</label><div class="catalog-search-box"><span aria-hidden="true">⌕</span><input class="search" id="catalogSearch" type="search" autocomplete="off" placeholder="'+(isS?'Ex.: îmi curge apa sub chiuvetă, centrală defectă…':'Ex.: pompă de căldură, AC, baterie, boiler…')+'" aria-label="Caută în catalog"></div>'+('<div class="intent-examples" aria-label="Exemple de căutare"><span>Încearcă:</span>'+(isS?'<button type="button" data-example="nu am căldură">Nu am căldură</button><button type="button" data-example="curge apa">Curge apa</button><button type="button" data-example="vreau aer condiționat">Vreau aer condiționat</button><button type="button" data-example="revizie centrală">Revizie centrală</button>':'<button type="button" data-example="centrală pentru apartament">Centrală pentru apartament</button><button type="button" data-example="AC pentru 35 mp">AC pentru 35 mp</button><button type="button" data-example="baterie pentru duș">Baterie pentru duș</button><button type="button" data-example="pompă de căldură">Pompă de căldură</button>')+'</div>')+'<p class="catalog-search-note" id="searchHint" role="status" aria-live="polite">'+(isS?'Rezultatele sugerează servicii relevante, nu reprezintă diagnostic tehnic.':'Rezultatele se actualizează pe măsură ce tastezi.')+'</p><div class="filters" id="filters" aria-label="Filtrează după familie"><button class="chip" type="button" data-family="toate" aria-pressed="true">Toate</button><button class="chip" type="button" data-family="incalzire" aria-pressed="false">Încălzire</button><button class="chip" type="button" data-family="climatizare" aria-pressed="false">Climatizare</button><button class="chip" type="button" data-family="sanitare" aria-pressed="false">Sanitare</button></div></div><p class="muted tiny" id="catalogCount" aria-live="polite"></p><div class="catalog" id="catalogGrid"></div>')+cta}
 /* Intent routing is a transparent, local heuristic, not generative AI or technical diagnosis. */
 function normalizeSearch(s){return String(s||'').toLocaleLowerCase('ro').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim()}
 function intentSignals(query){const q=normalizeSearch(query);const rules=[
@@ -44,12 +44,71 @@ function searchScore(item,query,signals){const q=normalizeSearch(query);if(!q)re
  const words=q.split(' ').filter(w=>w.length>2&&!stop.has(w));for(const w of words){if(name.includes(w))score+=4;else if(desc.includes(w))score+=1}
  if(signals.length){for(const rule of signals){if(rule.tags.includes(item.family))score+=6;for(const tag of rule.tags){if(tag===item.family)continue;if(name.includes(tag))score+=8;else if(desc.includes(tag))score+=2}}}
  return score}
-function cards(){const isS=page==='servicii',items=isS?SERVICES:PRODUCTS,params=new URLSearchParams(location.search);let family=params.get('familie')||'toate',term='';if(!['toate','incalzire','climatizare','sanitare'].includes(family))family='toate';const grid=$('#catalogGrid'),count=$('#catalogCount'),hint=$('#searchHint');const draw=()=>{const signals=isS?intentSignals(term):[],entries=items.map(x=>({item:x,score:searchScore(x,term,signals)})).filter(x=>(family==='toate'||x.item.family===family)&&(!term.trim()||x.score>0)).sort((a,b)=>term.trim()?b.score-a.score:0);
-count.textContent=entries.length+' rezultate din '+items.length;
- if(hint&&isS)hint.textContent=signals.length?'Intenție identificată: '+signals.map(x=>x.label).join(', ')+'. Rezultatele sunt sugestii, nu un diagnostic.':term.trim()?'Rezultate după cuvinte-cheie din catalog. Dacă nu găsești lucrarea, descrie problema altfel.':'Descrie problema în limbaj natural sau alege o familie.';
- grid.innerHTML=entries.map(({item:x})=>'<article class="entry"><span class="eyebrow">'+esc(famNames[x.family])+'</span><h3>'+esc(x.name)+'</h3><p>'+esc(x.summary||x.description)+'</p><button type="button" data-id="'+esc(x.id)+'" aria-label="Detalii '+esc(x.name)+'">Vezi detalii și cere ofertă →</button></article>').join('')||'<div class="notice">Nu am găsit o potrivire sigură în catalog. Încearcă o formulare diferită sau selectează altă familie.</div>';
-grid.querySelectorAll('button[data-id]').forEach(button=>button.addEventListener('click',()=>showDetail(items.find(i=>i.id===button.dataset.id))));
-$('#filters').querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.family===family)))};
+
+/* Transparent product intent routing; suggested relevance is not a sizing calculation. */
+function productIntentSignals(query){const q=normalizeSearch(query);return [
+ {pattern:/centrala|apartament|incalzire casa/,family:'incalzire',tags:['centrala','condensare','termostat'],label:'încălzirea locuinței'},
+ {pattern:/pompa de caldura|consum mai mic|incalzire eficienta/,family:'incalzire',tags:['pompa de caldura'],label:'pompă de căldură'},
+ {pattern:/ac |aer conditionat|climatizare|racire|35 mp|btu|multisplit/,family:'climatizare',tags:['aer conditionat','split','btu','inverter'],label:'climatizarea spațiului'},
+ {pattern:/baterie|robinet|dus|cabina de dus|cada|baie/,family:'sanitare',tags:['baterie','robinet','dus','cada'],label:'echipamente sanitare'},
+ {pattern:/apa calda|boiler|rezervor acm/,family:'incalzire',tags:['boiler','rezervor'],label:'apă caldă'},
+ {pattern:/filtru|deduriz|apa dura/,family:'sanitare',tags:['filtru','deduriz'],label:'tratarea apei'}
+ ].filter(rule=>rule.pattern.test(q))}
+function productScore(item,query,signals){let score=searchScore(item,query,[]);if(!query.trim())return score;
+ const name=normalizeSearch(item.name),desc=normalizeSearch(item.description+' '+item.choose);
+ for(const r of signals){if(item.family===r.family)score+=3;for(const t of r.tags){if(name.includes(t))score+=14;else if(desc.includes(t))score+=2}}
+ return score}
+function productPhoto(product){
+ const n=normalizeSearch(product.name);
+ if(product.family==='incalzire'){
+ if(/pompa de caldura|panou solar/.test(n))return {src:'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=640&q=80',alt:'Imagine de ambient pentru încălzire; nu reprezintă produsul sau modelul selectat'};
+ if(/radiator|portprosop|pardoseala/.test(n))return {src:'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=640&q=80',alt:'Interior contemporan ilustrativ pentru familia Încălzire'};
+ return {src:'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=640&q=80',alt:'Interior ilustrativ pentru echipamente de încălzire'};
+ }
+ if(product.family==='climatizare')return {src:'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=640&q=80',alt:'Interior ilustrativ pentru climatizare; nu este imaginea echipamentului'};
+ return {src:'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=640&q=80',alt:'Baie ilustrativă pentru obiecte și accesorii sanitare'};
+}
+function relatedService(product){
+ const n=normalizeSearch(product.name),s=SERVICES;
+ let terms=[];
+ if(product.family==='incalzire'){
+ if(/centrala/.test(n))terms=['Montaj centrală termică'];
+ else if(/pompa de caldura/.test(n))terms=['Montaj pompă de căldură aer-apă'];
+ else if(/radiator|portprosop/.test(n))terms=['Montaj radiatoare și calorifere'];
+ else if(/pardoseala|distribuitor/.test(n))terms=['Încălzire în pardoseală cu apă'];
+ else if(/boiler|rezervor acm/.test(n))terms=['Montaj boiler și rezervor ACM'];
+ else if(/termostat|automatizar/.test(n))terms=['Montaj termostate și automatizări'];
+ else if(/panou solar/.test(n))terms=['Montaj colectoare solare termice'];
+ else terms=['Evaluare și dimensionare instalație termică'];
+ }else if(product.family==='climatizare'){
+ if(/multisplit/.test(n))terms=['Montaj multisplit'];
+ else if(/ventilat|recuperare/.test(n))terms=['Montaj ventilație cu recuperare de căldură'];
+ else if(/wifi|automatizar|termostat/.test(n))terms=['Automatizări climatizare și Wi-Fi'];
+ else terms=['Consultanță și dimensionare aer condiționat','Montaj AC split 9000–12000 BTU'];
+ }else{
+ if(/wc|rezervor incastrat/.test(n))terms=['Montaj WC și rezervor încastrat'];
+ else if(/dus|cada/.test(n))terms=['Montaj cadă și cabină de duș'];
+ else if(/lavoar|chiuveta/.test(n))terms=['Montaj lavoar și chiuvetă'];
+ else if(/baterie|robinet/.test(n))terms=['Montaj baterii, robineți și accesorii'];
+ else if(/filtru|deduriz/.test(n))terms=['Montaj filtre și dedurizatoare de apă'];
+ else if(/boiler/.test(n))terms=['Montaj boiler electric'];
+ else if(/pompa/.test(n))terms=['Montaj pompe de ridicare / evacuare'];
+ else if(/canaliz|sifon/.test(n))terms=['Instalații de canalizare interioară'];
+ else terms=['Instalații de alimentare cu apă'];
+ }
+ return terms.map(t=>s.find(x=>x.name===t)).filter(Boolean);
+}
+function productOfferUrl(product,service){return 'oferta.html?interes='+encodeURIComponent(product.name)+(service?'&serviciu='+encodeURIComponent(service.name):'')}
+function cards(){const isS=page==='servicii',items=isS?SERVICES:PRODUCTS,params=new URLSearchParams(location.search);let family=params.get('familie')||'toate',term='';if(!['toate','incalzire','climatizare','sanitare'].includes(family))family='toate';const grid=$('#catalogGrid'),count=$('#catalogCount'),hint=$('#searchHint');
+ const draw=()=>{const signals=isS?intentSignals(term):productIntentSignals(term),entries=items.map(x=>({item:x,score:isS?searchScore(x,term,signals):productScore(x,term,signals)})).filter(x=>(family==='toate'||x.item.family===family)&&(!term.trim()||x.score>0)).sort((a,b)=>term.trim()?b.score-a.score:0);
+ count.textContent=entries.length+' rezultate din '+items.length;
+ if(hint)hint.textContent=signals.length?'Intenție sugerată: '+signals.map(x=>x.label).join(', ')+'. Recomandările necesită confirmare tehnică.':term.trim()?'Rezultate din catalog după cuvinte-cheie. Reformulează dacă nu găsești produsul.':'Caută cu un cuvânt-cheie sau descrie ce îți dorești.';
+ grid.innerHTML=entries.map(({item:x})=>{if(isS)return '<article class="entry"><span class="eyebrow">'+esc(famNames[x.family])+'</span><h3>'+esc(x.name)+'</h3><p>'+esc(x.summary||x.description)+'</p><button type="button" data-id="'+esc(x.id)+'" aria-label="Detalii '+esc(x.name)+'">Vezi detalii și cere ofertă →</button></article>';
+ const photo=productPhoto(x),service=relatedService(x)[0];
+ return '<article class="entry product-entry"><div class="product-entry-text"><span class="eyebrow">'+esc(famNames[x.family])+'</span><h3>'+esc(x.name)+'</h3><p>'+esc(x.description)+'</p><span class="product-preview-note">Imagine ilustrativă · produsul exact se confirmă</span><button type="button" data-id="'+esc(x.id)+'" aria-label="Detalii despre '+esc(x.name)+'">Vezi fișa produsului ↗</button>'+(service?'<p class="product-related">Serviciu asociat: '+esc(service.name)+'</p>':'')+'</div><img src="'+esc(photo.src)+'" alt="'+esc(photo.alt)+'" loading="lazy" decoding="async"></article>'
+ }).join('')||'<div class="notice">Nu am găsit o potrivire în catalog. Încearcă o altă formulare.</div>';
+ grid.querySelectorAll('button[data-id]').forEach(button=>button.addEventListener('click',()=>showDetail(items.find(i=>i.id===button.dataset.id))));
+ $('#filters').querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.family===family)))};
  $('#filters').addEventListener('click',event=>{const b=event.target.closest('button[data-family]');if(b){family=b.dataset.family;draw()}});
  const input=$('#catalogSearch');input.addEventListener('input',()=>{term=input.value;draw()});
  document.querySelectorAll('[data-example]').forEach(b=>b.addEventListener('click',()=>{term=b.dataset.example;input.value=term;family='toate';draw();input.focus()}));draw()}
